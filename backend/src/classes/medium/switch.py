@@ -10,7 +10,7 @@ class Switch:
             self.dict[port]=None
 
     def connect(self,device):
-        if(self.free_ports.empty()):
+        if not self.free_ports:
             return None
         else:
             free_port=self.free_ports.popleft()
