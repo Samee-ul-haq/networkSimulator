@@ -95,6 +95,12 @@ from network.packet import IPPacket
 from network.routing_table import Route
 
 
+from transport.port_manager import PortManager
+from transport.gobackn import GoBackNSender
+
+
+from application.file_transfer import FileTransferApp
+
 
 
 # =========================
@@ -198,11 +204,11 @@ router.show_routing_table()
 # CREATE PACKET
 # =========================
 
-packet = IPPacket(
-    src_ip="192.168.1.2",
-    dst_ip="10.0.0.2",
-    payload="Hello PC2"
-)
+# packet = IPPacket(
+#     src_ip="192.168.1.2",
+#     dst_ip="10.0.0.2",
+#     payload="Hello PC2"
+# )
 
 # =========================
 # ARP ENTRIES
@@ -213,14 +219,49 @@ router.arp_table.add_entry(
     "CC:CC:CC:CC:CC:01"
 )
 
-
-# =========================
-# FORWARD PACKET
-# =========================
 router.arp_table.show_table()
 
-pc1.send_data(
-    destination_ip="10.0.0.2",
-    message="Hello PC2",
-    gateway="192.168.1.1"
+file_data = (
+    "THIS_IS_A_NETWORK_SIMULATOR_PROJECT"
 )
+
+pc2.register_process(
+    PortManager.WELL_KNOWN_PORTS["FILE_TRANSFER"],
+    "File Transfer Service"
+)
+
+
+file_app = FileTransferApp(
+    chunk_size=5
+)
+
+chunks = file_app.split_file(
+    file_data
+)
+
+print("\nFile Chunks")
+
+for chunk in chunks:
+
+    print(chunk)
+
+
+sender = GoBackNSender(
+    sender_node=pc1,
+    receiver_ip="10.0.0.2",
+    gateway="192.168.1.1",
+    source_port=PortManager.allocate_ephemeral_port(),
+    destination_port=5010,
+    window_size=4
+)
+
+sender.send(chunks)
+
+
+# pc1.send_data(
+#     destination_ip="10.0.0.2",
+#     message="Hello from Chat App",
+#     gateway="192.168.1.1",
+#     source_port=PortManager.allocate_ephemeral_port(),
+#     destination_port=5000
+# )

@@ -1,13 +1,14 @@
 class PortManager:
-    WELL_KNOWN = {
+
+    WELL_KNOWN_PORTS = {
         "CHAT": 5000,
-        "FTP": 21
+        "FILE_TRANSFER": 5010
     }
 
-    ephemeral = 49152
+    ephemeral_port = 49152
 
     @classmethod
-    def allocate(cls):
-        port = cls.ephemeral
-        cls.ephemeral += 1
+    def allocate_ephemeral_port(cls):
+        port = cls.ephemeral_port
+        cls.ephemeral_port += 1
         return port
