@@ -46,29 +46,41 @@
 
 
 
-from core.node import Node
-from core.router import Router
-from core.interface import Interface
+# from core.node import Node
+# from core.router import Router
+# from core.interface import Interface
 
-pc1 = Node("PC1")
+# pc1 = Node("PC1")
 
-iface1 = Interface(
-    "eth0",
-    "192.168.1.2/24",
-    "AA:BB:CC:DD:EE:01"
+# iface1 = Interface(
+#     "eth0",
+#     "192.168.1.2/24",
+#     "AA:BB:CC:DD:EE:01"
+# )
+
+# pc1.add_interface(iface1)
+
+# router = Router("R1")
+
+# iface2 = Interface(
+#     "eth0",
+#     "192.168.1.1/24",
+#     "AA:BB:CC:DD:EE:FF"
+# )
+
+# router.add_interface(iface2)
+
+# pc1.show_interfaces()
+# router.show_interfaces()
+
+from utils.ip_utils import get_network
+from utils.ip_utils import same_subnet
+
+print(get_network("192.168.1.10/24"))
+
+print(
+    same_subnet(
+        "192.168.1.10/24",
+        "192.168.1.20/24"
+    )
 )
-
-pc1.add_interface(iface1)
-
-router = Router("R1")
-
-iface2 = Interface(
-    "eth0",
-    "192.168.1.1/24",
-    "AA:BB:CC:DD:EE:FF"
-)
-
-router.add_interface(iface2)
-
-pc1.show_interfaces()
-router.show_interfaces()
