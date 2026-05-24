@@ -208,6 +208,29 @@ def test_s1_switch():
     report_domains("5 devices + Switch",
                    collision_domains = sw.collision_domains,
                    broadcast_domains = sw.broadcast_domains)
+    
+    print("\n[TEST] Flow Control Demonstration (Go-Back-N over Switch)")
+    print("       PC1 sending a stream of frames to PC2 with window_size=3")
+    
+    # 1. Create a sequence of segments/frames to send
+    segments = [
+        TCPSegment(
+            src_port = PortManager.allocate_ephemeral_port(),
+            dst_port = PortManager.WELL_KNOWN_PORTS["CHAT"],
+            seq_num  = i,
+            ack_num  = 0,
+            data     = f"L2_FLOW_FRAME_{i}",
+        )
+        for i in range(5)
+    ]
+
+    # 2. Instantiate your existing Go-Back-N protocol
+    gbn_sender   = GoBackNSender(window_size=3)
+    gbn_receiver = GoBackNReceiver()
+
+    # 3. Execute the transmission (simulating a dropped packet at index 2 to prove it works)
+    # The console will log the window sliding and the retransmission.
+    gbn_sender.send(segments, gbn_receiver, simulate_loss_at=2)
 
 
 def test_s1_two_stars():
