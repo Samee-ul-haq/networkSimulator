@@ -11,4 +11,7 @@ class PortManager:
     def allocate_ephemeral_port(cls):
         port = cls.ephemeral_port
         cls.ephemeral_port += 1
+        if port > 20000:
+            print("Too many active ports")
+            return -1
         return port

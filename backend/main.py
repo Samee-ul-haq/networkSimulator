@@ -254,6 +254,8 @@ sender = GoBackNSender(
     destination_port=5010,
     window_size=4
 )
+if sender.source_port==-1:
+    print("failed")
 
 sender.send(chunks)
 
